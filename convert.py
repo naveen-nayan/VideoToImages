@@ -4,14 +4,13 @@ import cv2
 from tqdm import tqdm
 
 
-def main(videoPath, outfps, outFolder, videoName):
+def main(videoPath, outFolder, videoName):
     print("Starting conversion")
     # for idx, file in enumerate(files):
     vidcap = cv2.VideoCapture(videoPath)
     sourcefps = vidcap.get(cv2.CAP_PROP_FPS)
-    if outfps > sourcefps:
-        outfps = 0
-    print(f"converting file: {videoPath}")
+    outfps = int(sourcefps)
+    print(f"converting file: {videoPath} with FPS: {outfps}")
     frameCount = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
     skip = 0
     if outfps > 0:
@@ -30,15 +29,12 @@ def main(videoPath, outfps, outFolder, videoName):
 
 if __name__ == '__main__':
     videoPath = input("Enter video folder path: ")
-    outfps = input("Enter output FPS: ")
     files = [file for file in os.listdir(videoPath) if file.endswith(".mp4") or file.endswith(".MP4")]
 
     for idx, file in enumerate(files):
         outFolder = os.path.join(videoPath, file.split('.')[0])
         print(outFolder)
         compFilePath = os.path.join(videoPath, file)
-        print( f"{compFilePath[:-4]}_.png")
-        print(f"[{idx+1}]converting file: {file}")
         try:
             os.makedirs(outFolder)
         except OSError:
@@ -46,4 +42,4 @@ if __name__ == '__main__':
         else:
             print("Successfully created the directory %s " % outFolder)
 
-        main(compFilePath, int(outfps), outFolder, file)
+        main(compFilePath, outFolder, file)
